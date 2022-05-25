@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import datetime
 
 
 def get_unique_cnt(x):
@@ -27,10 +28,8 @@ def get_fiscal_quarter_ms(x, offset = 0):
     if isinstance(x, datetime.datetime):
         if offset > 0: 
             offset += 1
-        
-        print(offset)
+
         f_x = x + BQuarterEnd(offset)
-        print(x, f_x)
         
         fiscal_quarter = f_x.to_period('Q-Jul')
 
