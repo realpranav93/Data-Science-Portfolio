@@ -37,3 +37,59 @@ def get_fiscal_quarter_ms(x, offset = 0):
         print("Input is not a date") 
 
     return fiscal_quarter
+
+
+import re
+import inspect
+from functools import wraps
+
+def str_to_int(fn):
+    """finds all the integers in the string ouptut of a function and converts it into int. Is a wrapper for other functions"""
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        return int(''.join(re.findall("\d+", fn(*args, **kwargs))))
+    return wrapper
+
+   
+@str_to_int
+def intvalue_before_str(s, string):
+    """
+    s = input string 
+    string = pattern which needs to be matched
+    finds the pattern in string and extracts the test before it and with str_to_int decorator gets converted into int
+    """
+    if isinstance(s, str): 
+        if re.search("([\d,.-_]+)%s" % (string), s).group(1): 
+            return re.search("([\d,.-_]+)%s" % (string), s).group(1)
+        else: 
+            return '0'
+    else: 
+        return '0'
+
+@str_to_int
+def intvalue_after_str(s, string):
+    """
+    s = input string 
+    string = pattern which needs to be matched
+    finds the pattern in string and extracts the test after it and with str_to_int decorator gets converted into int
+    """
+    if isinstance(s, str): 
+        if re.search("([\d,.-_]+)%s([\d,.-_]+)" % (string), s).group(2): 
+            return re.search("([\d,.-_]+)%s([\d,.-_]+)" % (string), s).group(2)
+        else: 
+            return '0'
+    else: 
+        return '0'
+
+@str_to_int
+def value_between_str(s, start_str, end_str):
+    if isinstance(s, str): 
+        if re.search('%s(.*)%s' % (start_str,end_str), s): 
+            return re.search('%s(.*)%s' % (start_str,end_str), s).group(1)
+        else: 
+            return ''
+    else: 
+        return ''
+
+def get_diff_list(a, b):
+    return list(set(a) - set(b))
